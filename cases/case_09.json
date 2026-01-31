@@ -1,0 +1,17 @@
+{
+  "case_id": "case_09",
+  "patient": {
+    "age": 50,
+    "sex": "M"
+  },
+  "requesting_provider": {
+    "name": "Dr. Taylor",
+    "role": "Ordering clinician"
+  },
+  "exam_request": {
+    "procedure": "Lumbar spine MRI",
+    "modality": "MRI",
+    "body_part": "Lumbar spine"
+  },
+  "note_text": "29-year-old fell from a ladder. Acute severe back pain and concern for fracture/trauma. Imaging requested."
+}

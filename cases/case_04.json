@@ -1,0 +1,17 @@
+{
+  "case_id": "case_04",
+  "patient": {
+    "age": 50,
+    "sex": "M"
+  },
+  "requesting_provider": {
+    "name": "Dr. Taylor",
+    "role": "Ordering clinician"
+  },
+  "exam_request": {
+    "procedure": "Lumbar spine MRI",
+    "modality": "MRI",
+    "body_part": "Lumbar spine"
+  },
+  "note_text": "45-year-old with severe back pain for 2 weeks and new urinary retention with saddle anesthesia. Progressive weakness noted. Urgent imaging requested."
+}

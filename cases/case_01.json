@@ -1,0 +1,17 @@
+{
+  "case_id": "case_01",
+  "patient": {
+    "age": 50,
+    "sex": "M"
+  },
+  "requesting_provider": {
+    "name": "Dr. Taylor",
+    "role": "Ordering clinician"
+  },
+  "exam_request": {
+    "procedure": "Lumbar spine MRI",
+    "modality": "MRI",
+    "body_part": "Lumbar spine"
+  },
+  "note_text": "50-year-old with low back pain radiating to the left leg for 8 weeks. Tried ibuprofen and naproxen. Completed 6 weeks of physical therapy with minimal improvement. Exam: positive straight leg raise. Denies bowel or bladder changes."
+}

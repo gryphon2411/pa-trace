@@ -1,0 +1,17 @@
+{
+  "case_id": "case_10",
+  "patient": {
+    "age": 50,
+    "sex": "M"
+  },
+  "requesting_provider": {
+    "name": "Dr. Taylor",
+    "role": "Ordering clinician"
+  },
+  "exam_request": {
+    "procedure": "Lumbar spine MRI",
+    "modality": "MRI",
+    "body_part": "Lumbar spine"
+  },
+  "note_text": "66-year-old with prior spine surgery now with worsening weakness and foot drop over 1 week. MRI requested. This is progressive weakness."
+}

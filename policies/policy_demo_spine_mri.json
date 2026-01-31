@@ -1,0 +1,20 @@
+[
+  {
+    "chunk_id": "POLICY_DEMO_001",
+    "title": "Lumbar spine MRI — conservative care threshold (demo paraphrase)",
+    "text": "Advanced imaging of the lumbar spine is typically considered when symptoms persist despite a course of provider-directed conservative care (often about 6 weeks) and findings suggest radiculopathy or other concerning features. If conservative care is not documented, additional information may be required.",
+    "source_note": "Demo paraphrase. Replace with a citable excerpt from a public payer guideline for your submission."
+  },
+  {
+    "chunk_id": "POLICY_DEMO_002",
+    "title": "Red flags / urgent indications (demo paraphrase)",
+    "text": "Conservative care requirements may not apply when there are red-flag indications suggesting serious pathology (e.g., suspected cauda equina syndrome, progressive neurologic deficit, malignancy, infection, or significant trauma).",
+    "source_note": "Demo paraphrase. Replace with a citable excerpt from a public payer guideline for your submission."
+  },
+  {
+    "chunk_id": "POLICY_DEMO_003",
+    "title": "Documentation expectation (demo paraphrase)",
+    "text": "Requests should include relevant clinical documentation supporting medical necessity: symptom duration, prior therapies tried and duration, pertinent exam findings, and any prior imaging/tests when applicable.",
+    "source_note": "Demo paraphrase."
+  }
+]

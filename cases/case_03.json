@@ -1,0 +1,17 @@
+{
+  "case_id": "case_03",
+  "patient": {
+    "age": 50,
+    "sex": "M"
+  },
+  "requesting_provider": {
+    "name": "Dr. Taylor",
+    "role": "Ordering clinician"
+  },
+  "exam_request": {
+    "procedure": "Lumbar spine MRI",
+    "modality": "MRI",
+    "body_part": "Lumbar spine"
+  },
+  "note_text": "62-year-old with low back pain for 10 weeks. Has been doing home exercises for two months and attended physical therapy for 4 weeks. Also had an epidural steroid injection. Symptoms persist."
+}

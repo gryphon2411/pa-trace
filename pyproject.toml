@@ -1,0 +1,9 @@
+[project]
+name = "pa-trace"
+version = "0.1.0"
+description = "UI-less hackathon MVP for evidence-traced prior auth packet drafting"
+requires-python = ">=3.9"
+dependencies = []
+
+[project.scripts]
+pa-trace = "pa_trace.cli:main"

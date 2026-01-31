@@ -1,0 +1,17 @@
+{
+  "case_id": "case_08",
+  "patient": {
+    "age": 50,
+    "sex": "M"
+  },
+  "requesting_provider": {
+    "name": "Dr. Taylor",
+    "role": "Ordering clinician"
+  },
+  "exam_request": {
+    "procedure": "Lumbar spine MRI",
+    "modality": "MRI",
+    "body_part": "Lumbar spine"
+  },
+  "note_text": "40-year-old with low back pain for three months. Completed 8 weeks of physical therapy and uses NSAIDs. No improvement. No trauma. No bowel or bladder symptoms."
+}

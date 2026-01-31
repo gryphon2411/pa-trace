@@ -1,0 +1,17 @@
+{
+  "case_id": "case_06",
+  "patient": {
+    "age": 50,
+    "sex": "M"
+  },
+  "requesting_provider": {
+    "name": "Dr. Taylor",
+    "role": "Ordering clinician"
+  },
+  "exam_request": {
+    "procedure": "Lumbar spine MRI",
+    "modality": "MRI",
+    "body_part": "Lumbar spine"
+  },
+  "note_text": "47-year-old with back pain radiating to the right leg for 7 weeks. Tried physical therapy but duration not documented. Uses ibuprofen intermittently. No red flags reported."
+}

@@ -1,0 +1,17 @@
+{
+  "case_id": "case_02",
+  "patient": {
+    "age": 50,
+    "sex": "M"
+  },
+  "requesting_provider": {
+    "name": "Dr. Taylor",
+    "role": "Ordering clinician"
+  },
+  "exam_request": {
+    "procedure": "Lumbar spine MRI",
+    "modality": "MRI",
+    "body_part": "Lumbar spine"
+  },
+  "note_text": "34-year-old with acute low back pain for 3 weeks after lifting. Using NSAIDs. No physical therapy yet. No weakness. Denies bowel or bladder issues."
+}

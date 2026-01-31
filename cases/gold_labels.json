@@ -1,0 +1,108 @@
+{
+  "case_01": {
+    "symptoms_duration_weeks": 8,
+    "conservative_care_weeks": 6,
+    "red_flags_present": false,
+    "expected_status": "MET",
+    "treatments": [
+      "nsaids",
+      "pt"
+    ],
+    "red_flags": []
+  },
+  "case_02": {
+    "symptoms_duration_weeks": 3,
+    "conservative_care_weeks": null,
+    "red_flags_present": false,
+    "expected_status": "UNKNOWN",
+    "treatments": [
+      "nsaids"
+    ],
+    "red_flags": []
+  },
+  "case_03": {
+    "symptoms_duration_weeks": 10,
+    "conservative_care_weeks": 8,
+    "red_flags_present": false,
+    "expected_status": "MET",
+    "treatments": [
+      "home_exercise",
+      "pt",
+      "injection"
+    ],
+    "red_flags": []
+  },
+  "case_04": {
+    "symptoms_duration_weeks": 2,
+    "conservative_care_weeks": null,
+    "red_flags_present": true,
+    "expected_status": "MET",
+    "treatments": [],
+    "red_flags": [
+      "cauda_equina",
+      "progressive_neuro_deficit"
+    ]
+  },
+  "case_05": {
+    "symptoms_duration_weeks": 5,
+    "conservative_care_weeks": null,
+    "red_flags_present": true,
+    "expected_status": "MET",
+    "treatments": [
+      "nsaids"
+    ],
+    "red_flags": [
+      "cancer"
+    ]
+  },
+  "case_06": {
+    "symptoms_duration_weeks": 7,
+    "conservative_care_weeks": null,
+    "red_flags_present": false,
+    "expected_status": "UNKNOWN",
+    "treatments": [
+      "pt",
+      "nsaids"
+    ],
+    "red_flags": []
+  },
+  "case_07": {
+    "symptoms_duration_weeks": null,
+    "conservative_care_weeks": null,
+    "red_flags_present": false,
+    "expected_status": "UNKNOWN",
+    "treatments": [],
+    "red_flags": []
+  },
+  "case_08": {
+    "symptoms_duration_weeks": 12,
+    "conservative_care_weeks": 8,
+    "red_flags_present": false,
+    "expected_status": "MET",
+    "treatments": [
+      "pt",
+      "nsaids"
+    ],
+    "red_flags": []
+  },
+  "case_09": {
+    "symptoms_duration_weeks": null,
+    "conservative_care_weeks": null,
+    "red_flags_present": true,
+    "expected_status": "MET",
+    "treatments": [],
+    "red_flags": [
+      "fracture_trauma"
+    ]
+  },
+  "case_10": {
+    "symptoms_duration_weeks": 1,
+    "conservative_care_weeks": null,
+    "red_flags_present": true,
+    "expected_status": "MET",
+    "treatments": [],
+    "red_flags": [
+      "progressive_neuro_deficit"
+    ]
+  }
+}

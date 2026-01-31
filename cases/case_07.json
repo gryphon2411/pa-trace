@@ -1,0 +1,17 @@
+{
+  "case_id": "case_07",
+  "patient": {
+    "age": 50,
+    "sex": "M"
+  },
+  "requesting_provider": {
+    "name": "Dr. Taylor",
+    "role": "Ordering clinician"
+  },
+  "exam_request": {
+    "procedure": "Lumbar spine MRI",
+    "modality": "MRI",
+    "body_part": "Lumbar spine"
+  },
+  "note_text": "51-year-old with chronic back pain. MRI requested. Note does not document prior treatments or symptom duration. Denies fever and denies bowel or bladder issues."
+}

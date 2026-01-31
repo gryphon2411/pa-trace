@@ -1,0 +1,17 @@
+{
+  "case_id": "case_05",
+  "patient": {
+    "age": 50,
+    "sex": "M"
+  },
+  "requesting_provider": {
+    "name": "Dr. Taylor",
+    "role": "Ordering clinician"
+  },
+  "exam_request": {
+    "procedure": "Lumbar spine MRI",
+    "modality": "MRI",
+    "body_part": "Lumbar spine"
+  },
+  "note_text": "58-year-old with back pain for 5 weeks and history of cancer with unexplained weight loss. No response to NSAIDs. MRI requested to evaluate concerning features."
+}
