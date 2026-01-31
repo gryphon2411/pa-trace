@@ -5,6 +5,7 @@ vars:
   VENV: .venv
   PY: '{{.VENV}}/bin/python'
   PIP: '{{.VENV}}/bin/pip'
+  MODEL_FILE: models/google_medgemma-4b-it-Q4_K_M.gguf
 
 tasks:
   venv:
@@ -18,8 +19,18 @@ tasks:
   deps:
     desc: Install project (editable) into venv
     deps: [venv]
+    status:
+      - test -d {{.VENV}} && {{.PY}} -c "import pa_trace" >/dev/null 2>&1
     cmds:
       - "{{.PIP}} install -e ."
+
+  model:
+    desc: Download MedGemma GGUF model from HuggingFace
+    status:
+      - test -f {{.MODEL_FILE}}
+    cmds:
+      - mkdir -p models
+      - "{{.PY}} -m huggingface_hub.commands.huggingface_cli download google/medgemma-4b-it-gguf google_medgemma-4b-it-Q4_K_M.gguf --local-dir models/"
 
   run:
     desc: "Run pipeline on one case (env: CASE, OUT, MODE)"
@@ -28,6 +39,9 @@ tasks:
       CASE: '{{default "cases/case_01.json" .CASE}}'
       OUT: '{{default "runs/case_01" .OUT}}'
       MODE: '{{default "baseline" .MODE}}'
+    preconditions:
+      - sh: '[ "{{.MODE}}" != "llm" ] || test -f {{.MODEL_FILE}}'
+        msg: "Missing model file. Run: task model"
     cmds:
       - "{{.PY}} -m pa_trace run --case {{.CASE}} --out {{.OUT}} --mode {{.MODE}}"
       - 'echo "Open: {{.OUT}}/highlights.html"'
@@ -41,6 +55,9 @@ tasks:
       GOLD: '{{default "cases/gold_labels.json" .GOLD}}'
       EVAL_OUT: '{{default "runs/eval" .EVAL_OUT}}'
       MODE: '{{default "baseline" .MODE}}'
+    preconditions:
+      - sh: '[ "{{.MODE}}" != "llm" ] || test -f {{.MODEL_FILE}}'
+        msg: "Missing model file. Run: task model"
     cmds:
       - "{{.PY}} -m pa_trace eval --cases {{.CASES_DIR}} --gold {{.GOLD}} --out {{.EVAL_OUT}} --mode {{.MODE}}"
       - 'echo "Eval report: {{.EVAL_OUT}}/eval_report.md"'
