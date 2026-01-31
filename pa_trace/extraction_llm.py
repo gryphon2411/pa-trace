@@ -90,10 +90,27 @@ def _parse_json_response(raw_output: str) -> Optional[Dict[str, Any]]:
 # -----------------------------------------------------------------------------
 # Evidence Validation
 # -----------------------------------------------------------------------------
+def _find_word_boundary_match(quote: str, text: str) -> int:
+    """
+    Find quote in text using word-boundary matching.
+    This prevents matching "pt" inside "symptoms".
+    Returns -1 if not found as a standalone word/phrase.
+    """
+    # Use word-boundary match to avoid false positives
+    pattern = r'\b' + re.escape(quote) + r'\b'
+    match = re.search(pattern, text, re.IGNORECASE)
+    if match:
+        return match.start()
+    
+    # No word-boundary match found - reject this quote
+    return -1
+
+
 def _validate_evidence_spans(parsed: Dict[str, Any], note_text: str) -> Dict[str, Any]:
     """
     Validate that all evidence quotes are actual substrings of the note.
     Recalculates start/end offsets from the actual quote position.
+    Uses word-boundary matching to avoid false positives (e.g., "pt" in "symptoms").
     Invalid evidence -> field set to null, added to missing_evidence.
     """
     evidence = parsed.get("evidence", {})
@@ -110,15 +127,15 @@ def _validate_evidence_spans(parsed: Dict[str, Any], note_text: str) -> Dict[str
         for ev in field_evidence:
             quote = ev.get("quote", "")
             if quote:
-                # Find actual position in note text
-                idx = note_text.find(quote)
+                # Find actual position using word-boundary matching
+                idx = _find_word_boundary_match(quote, note_text)
                 if idx != -1:
                     # Recalculate correct offsets
                     valid_evidence.append({
                         "source": "note",
                         "start": idx,
                         "end": idx + len(quote),
-                        "quote": quote
+                        "quote": note_text[idx:idx + len(quote)]  # Use actual text case
                     })
                 else:
                     # Quote not found in note - mark as missing
