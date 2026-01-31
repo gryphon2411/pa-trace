@@ -69,3 +69,20 @@ tasks:
     desc: Remove run outputs
     cmds:
       - rm -rf runs
+
+  smoke:
+    desc: Quick sanity check (baseline run + verify outputs)
+    deps: [deps]
+    cmds:
+      - rm -rf runs/smoke
+      - "{{.PY}} -m pa_trace run --case cases/case_01.json --out runs/smoke --mode baseline"
+      - test -f runs/smoke/packet.md
+      - test -f runs/smoke/highlights.html
+      - echo "✓ Smoke test passed"
+
+  lint:
+    desc: Check syntax (compileall)
+    deps: [deps]
+    cmds:
+      - "{{.PY}} -m compileall -q pa_trace/"
+      - echo "✓ Lint passed"

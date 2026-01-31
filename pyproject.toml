@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "UI-less hackathon MVP for evidence-traced prior auth packet drafting"
 requires-python = ">=3.9"
 dependencies = [
-    "llama-cpp-python>=0.3.0",
+    "llama-cpp-python>=0.3.0,<0.4.0",
     "huggingface_hub>=1.0.0",
 ]
 
