@@ -23,6 +23,8 @@ MODE=llm task run      # Run with MedGemma on case_01
 MODE=llm task eval     # Evaluate all 10 cases
 ```
 
+> **Fail-fast:** If you run `MODE=llm task run` without the model file, it will error immediately with: `Missing model file. Run: task model`
+
 Open the outputs:
 - `runs/case_01/highlights.html` — evidence spans highlighted in clinical note
 - `runs/case_01/packet.md` — human-readable PA packet draft
@@ -81,6 +83,12 @@ On the 10-case synthetic eval set:
 ## Policy text
 For demo purposes we ship a *paraphrased* policy snippet in `policies/policy_demo_spine_mri.json`.
 For a real submission, replace it with a **public payer guideline excerpt** you can cite, chunked into JSON.
+
+## Safety & Ethics
+
+- **Synthetic data only:** All cases use fabricated clinical notes with no PHI.
+- **No clinical recommendations:** A refusal guardrail blocks any attempt to use the model for diagnosis or treatment decisions.
+- **Provenance validation:** All evidence quotes are verified as exact substrings of the source text, preventing hallucinated citations.
 
 ## License
 MIT for this starter scaffold (your project can choose differently).
