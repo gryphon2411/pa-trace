@@ -104,5 +104,15 @@
     "red_flags": [
       "progressive_neuro_deficit"
     ]
+  },
+  "case_11": {
+    "symptoms_duration_weeks": 0,
+    "conservative_care_weeks": null,
+    "red_flags_present": true,
+    "expected_status": "MET",
+    "treatments": [],
+    "red_flags": [
+      "cauda_equina"
+    ]
   }
 }

@@ -12,7 +12,10 @@ import re
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 
-from .extraction_baseline import extract_facts_baseline
+from .extraction_baseline import (
+    extract_facts_baseline, _detect_red_flags, _find_conservative_care_weeks,
+    RED_FLAG_KEYWORDS, _evidence_span,
+)
 from .prompt_template import PROMPT_TEMPLATE
 
 # -----------------------------------------------------------------------------
@@ -160,6 +163,11 @@ def _validate_evidence_spans(parsed: Dict[str, Any], note_text: str) -> Dict[str
         
         valid_evidence = []
         for ev in field_evidence:
+            # Defensive: LLM sometimes returns strings instead of objects
+            if isinstance(ev, str):
+                ev = {"source": "note", "quote": ev}
+            if not isinstance(ev, dict):
+                continue
             quote = ev.get("quote", "")
             if not quote:
                 continue
@@ -190,6 +198,79 @@ def _validate_evidence_spans(parsed: Dict[str, Any], note_text: str) -> Dict[str
     
     parsed["evidence"] = evidence
     parsed["missing_evidence"] = missing
+    return parsed
+
+
+# -----------------------------------------------------------------------------
+# Baseline-Boosted Red Flag Detection
+# -----------------------------------------------------------------------------
+def _boost_red_flags_from_baseline(parsed: Dict[str, Any], note_text: str) -> Dict[str, Any]:
+    """
+    Safety net: run baseline regex red flag detection and merge any flags
+    the LLM missed. This is a union — LLM-detected flags are preserved,
+    baseline only adds what was missed.
+    """
+    baseline_flags = _detect_red_flags(note_text)
+    llm_flags = list(parsed.get("red_flags", []))
+
+    # Find flags detected by baseline but missed by LLM
+    missing_flags = [f for f in baseline_flags if f not in llm_flags]
+
+    if not missing_flags:
+        return parsed  # LLM caught everything, nothing to add
+
+    # Merge missing flags
+    merged_flags = sorted(set(llm_flags + missing_flags))
+    parsed["red_flags"] = merged_flags
+    parsed["red_flags_present"] = True
+
+    # Synthesize evidence spans for baseline-detected flags
+    evidence = parsed.get("evidence", {})
+    existing_rf_evidence = list(evidence.get("red_flags", []))
+
+    for flag in missing_flags:
+        keywords = RED_FLAG_KEYWORDS.get(flag, [])
+        for kw in keywords:
+            span = _evidence_span(note_text, kw)
+            if span:
+                existing_rf_evidence.append(span)
+                break  # one evidence span per flag is enough
+
+    evidence["red_flags"] = existing_rf_evidence
+    parsed["evidence"] = evidence
+
+    return parsed
+
+
+# -----------------------------------------------------------------------------
+# Baseline-Boosted Conservative Care Detection
+# -----------------------------------------------------------------------------
+def _boost_conservative_care_from_baseline(parsed: Dict[str, Any], note_text: str) -> Dict[str, Any]:
+    """
+    Safety net: if LLM did not extract conservative_care_weeks, run baseline
+    regex detection and inject the result if found.
+    """
+    if parsed.get("conservative_care_weeks") is not None:
+        return parsed  # LLM already found a value
+
+    baseline_weeks, matched_quote = _find_conservative_care_weeks(note_text)
+    if baseline_weeks is None:
+        return parsed  # baseline found nothing either
+
+    parsed["conservative_care_weeks"] = baseline_weeks
+
+    # Synthesize evidence span
+    if matched_quote:
+        evidence = parsed.get("evidence", {})
+        span = _evidence_span(note_text, matched_quote)
+        if span:
+            evidence["conservative_care_weeks"] = [span]
+            parsed["evidence"] = evidence
+
+    # Remove from missing_evidence if it was listed there
+    missing = parsed.get("missing_evidence", [])
+    parsed["missing_evidence"] = [m for m in missing if m != "conservative_care_weeks"]
+
     return parsed
 
 
@@ -252,7 +333,13 @@ def extract_facts_llm(note_text: str, retrieved_policy: List[Dict[str, Any]]) ->
     # 6. Validate evidence spans
     validated = _validate_evidence_spans(parsed, note_text)
     
-    # 7. Ensure required fields exist
+    # 7. Boost red flags from baseline (safety net)
+    validated = _boost_red_flags_from_baseline(validated, note_text)
+
+    # 8. Boost conservative care from baseline (safety net)
+    validated = _boost_conservative_care_from_baseline(validated, note_text)
+    
+    # 9. Ensure required fields exist
     validated.setdefault("symptoms_duration_weeks", None)
     validated.setdefault("conservative_care_weeks", None)
     validated.setdefault("treatments", [])
