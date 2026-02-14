@@ -29,34 +29,54 @@
         --c-redflags-border: #ef9a9a;
     }
 
+    html, body {
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+    }
+
     body { 
         font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; 
         background-color: var(--bg-color);
         color: var(--text-color);
-        margin: 0;
-        padding: 24px;
         line-height: 1.5;
+        display: flex;
+        flex-direction: column;
     }
 
-    .header { margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border-color); }
-    h1 { margin: 0; font-size: 24px; font-weight: 400; color: #1a73e8; display: flex; align-items: center; gap: 10px; }
-    .subtitle { color: var(--text-subtle); margin-top: 4px; font-size: 14px; }
+    /* ── App shell ───────────────────────────────── */
+    .header {
+        padding: 16px 24px 12px;
+        border-bottom: 1px solid var(--border-color);
+        flex-shrink: 0;
+    }
+    h1 { margin: 0; font-size: 22px; font-weight: 400; color: #1a73e8; display: flex; align-items: center; gap: 10px; }
+    .subtitle { color: var(--text-subtle); margin-top: 2px; font-size: 13px; }
     
-    .grid { display: grid; grid-template-columns: 3fr 2fr; gap: 24px; align-items: start; }
-    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+    .grid {
+        display: grid;
+        grid-template-columns: 3fr 2fr 2fr;
+        gap: 16px;
+        padding: 16px;
+        flex: 1;
+        min-height: 0;       /* allow children to shrink into scroll */
+    }
+    @media (max-width: 1100px) { .grid { grid-template-columns: 1fr; } .card { max-height: 50vh; } }
 
     .card { 
         background: var(--card-bg); 
         border-radius: 8px; 
         box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-        padding: 24px;
+        padding: 20px;
         transition: box-shadow 0.2s ease;
+        overflow-y: auto;
+        min-height: 0;       /* flex/grid child scroll support */
     }
     .card:hover { box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23); }
 
-    h2 { font-size: 18px; margin-top: 0; color: var(--text-color); }
+    h2 { font-size: 16px; margin-top: 0; color: var(--text-color); }
 
-    .note-container { font-family: 'Georgia', serif; font-size: 16px; line-height: 1.6; white-space: pre-wrap; color: #3c4043; }
+    .note-container { font-family: 'Georgia', serif; font-size: 15px; line-height: 1.6; white-space: pre-wrap; color: #3c4043; }
     
     mark { 
         background-color: transparent; 
@@ -75,10 +95,10 @@
 
     mark.active { font-weight: 600; box-shadow: 0 0 0 2px rgba(0,0,0,0.2); }
 
-    table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
-    td { padding: 12px 16px; background: #fff; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); vertical-align: middle; }
-    td:first-child { border-left: 1px solid var(--border-color); border-top-left-radius: 8px; border-bottom-left-radius: 8px; font-weight: 500; color: var(--text-subtle); width: 140px; }
-    td:last-child { border-right: 1px solid var(--border-color); border-top-right-radius: 8px; border-bottom-right-radius: 8px; width: 60px; text-align: right; }
+    table { width: 100%; border-collapse: separate; border-spacing: 0 6px; }
+    td { padding: 10px 12px; background: #fff; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); vertical-align: middle; font-size: 14px; }
+    td:first-child { border-left: 1px solid var(--border-color); border-top-left-radius: 8px; border-bottom-left-radius: 8px; font-weight: 500; color: var(--text-subtle); width: 120px; }
+    td:last-child { border-right: 1px solid var(--border-color); border-top-right-radius: 8px; border-bottom-right-radius: 8px; width: 50px; text-align: right; }
 
     .fact-row:hover td { background-color: #f1f3f4; cursor: pointer; }
     .fact-row.active td { background-color: #e8f0fe; border-color: #d2e3fc; }
@@ -93,7 +113,7 @@
     .fact-row.rejected .btn-x { background: #db4437; color: white; opacity: 1; }
     .fact-row.rejected .verify-controls { opacity: 1; }
 
-    .dot { height: 10px; width: 10px; background-color: #ddd; border-radius: 50%; display: inline-block; margin-right: 8px; }
+    .dot { height: 10px; width: 10px; background-color: #ddd; border-radius: 50%; display: inline-block; margin-right: 6px; }
     .dot.symptoms_duration_weeks { background-color: var(--c-symptoms-text); }
     .dot.conservative_care_weeks { background-color: var(--c-conservative-text); }
     .dot.treatments { background-color: var(--c-treatments-text); }
@@ -107,12 +127,12 @@
     .btn-check { color: #0f9d58; } .btn-check:hover { background: #e6f4ea; }
     .btn-x { color: #db4437; } .btn-x:hover { background: #fce8e6; }
 
-    .filters { margin-bottom: 16px; display: flex; gap: 10px; flex-wrap: wrap; }
-    .filter-btn { border: 1px solid var(--border-color); background: white; padding: 6px 12px; border-radius: 16px; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s; }
+    .filters { display: flex; gap: 8px; flex-wrap: wrap; }
+    .filter-btn { border: 1px solid var(--border-color); background: white; padding: 4px 10px; border-radius: 16px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: all 0.2s; }
     .filter-btn:hover { background: #f1f3f4; }
     .filter-btn.inactive { opacity: 0.5; text-decoration: line-through; }
 
-    .chunk { padding: 12px; border-left: 3px solid #eee; margin-bottom: 12px; background: #fafafa; border-radius: 0 4px 4px 0; }
+    .chunk { padding: 12px; border-left: 3px solid #dadce0; margin-bottom: 12px; background: #fafafa; border-radius: 0 4px 4px 0; }
     .chunk_id { font-size: 11px; font-weight: 700; color: #1967d2; text-transform: uppercase; margin-bottom: 4px; }
     .chunk pre { font-family: 'Roboto Mono', monospace; font-size: 12px; color: #444; margin: 0; white-space: pre-wrap; }
 
@@ -122,17 +142,18 @@
 <body>
 
   <div class="header">
-    <h1><span style="font-size: 28px;">⚕️</span> PA-Trace <span style="font-weight: 300; color: var(--text-subtle);">| Prior Auth Evidence Extraction</span></h1>
+    <h1><span style="font-size: 26px;">⚕️</span> PA-Trace <span style="font-weight: 300; color: var(--text-subtle);">| Prior Auth Evidence Extraction</span></h1>
     <div class="subtitle">Case ID: {{ case.case_id }} &bull; Generated by MedGemma 4B</div>
   </div>
 
   <div class="grid">
     
+    <!-- Column 1: Clinical Note -->
     <div class="card">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
           <h2 style="margin: 0;">Clinical Note</h2>
           <div class="filters">
-              <span style="font-size: 12px; color: #666; margin-right: 4px; align-self: center;">Show:</span>
+              <span style="font-size: 11px; color: #666; margin-right: 2px; align-self: center;">Show:</span>
               <button class="filter-btn" onclick="toggleFilter(this, 'symptoms_duration_weeks')"><span class="dot symptoms_duration_weeks"></span> Symptoms</button>
               <button class="filter-btn" onclick="toggleFilter(this, 'conservative_care_weeks')"><span class="dot conservative_care_weeks"></span> Conservative</button>
               <button class="filter-btn" onclick="toggleFilter(this, 'treatments')"><span class="dot treatments"></span> Treatments</button>
@@ -142,9 +163,10 @@
       <div class="note-container" id="clinical-note">{{ note_html | safe }}</div>
     </div>
 
+    <!-- Column 2: Extracted Evidence -->
     <div class="card">
       <h2>Extracted Evidence</h2>
-      <div class="subtitle" style="margin-bottom: 12px;">Review and verify each extracted fact. Hover to trace to source.</div>
+      <div class="subtitle" style="margin-bottom: 10px;">Review and verify each extracted fact. Hover to trace to source.</div>
       <table>
         {% for row in rows %}
         <tr class="fact-row" data-field="{{ row.key }}" onmouseover="highlightField('{{ row.key }}')" onmouseout="unhighlightField('{{ row.key }}')">
@@ -165,25 +187,27 @@
         {% endfor %}
       </table>
       
-      <h3 style="margin-top: 20px; font-size: 14px; color: var(--text-subtle);">Overall Status</h3>
+      <h3 style="margin-top: 16px; font-size: 13px; color: var(--text-subtle);">Overall Status</h3>
       <div style="font-size: 18px; font-weight: 600; color: {{ status_color }};">
         {{ overall_status }}
       </div>
     </div>
-  </div>
 
-  <div class="card" style="margin-top: 24px;">
-    <h2>Policy Chunks (Traceability)</h2>
-    {% if policy_chunks %}
-        {% for ch in policy_chunks %}
-            <div class='chunk'>
-                <div class='chunk_id'>{{ ch.chunk_id }}</div>
-                <pre>{{ ch.text }}</pre>
-            </div>
-        {% endfor %}
-    {% else %}
-        <div class="subtitle">No policy chunks retrieved.</div>
-    {% endif %}
+    <!-- Column 3: Policy Chunks -->
+    <div class="card">
+      <h2>Policy Chunks</h2>
+      {% if policy_chunks %}
+          {% for ch in policy_chunks %}
+              <div class='chunk'>
+                  <div class='chunk_id'>{{ ch.chunk_id }}</div>
+                  <pre>{{ ch.text }}</pre>
+              </div>
+          {% endfor %}
+      {% else %}
+          <div class="subtitle">No policy chunks retrieved.</div>
+      {% endif %}
+    </div>
+
   </div>
 
   <script>
@@ -218,16 +242,14 @@
 
     // Verification Logic (Visual State)
     function toggleVerify(event, field, type) {
-        event.stopPropagation(); // Prevent row highligting issues
+        event.stopPropagation();
         const row = document.querySelector('tr[data-field="' + field + '"]');
         if (!row) return;
 
-        // Clean existing states
         const isVerified = row.classList.contains('verified');
         const isRejected = row.classList.contains('rejected');
         row.classList.remove('verified', 'rejected');
 
-        // Apply new state if it wasn't already active (toggle behavior)
         if (type === 'check' && !isVerified) {
             row.classList.add('verified');
         } else if (type === 'x' && !isRejected) {
