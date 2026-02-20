@@ -190,14 +190,14 @@ def extract_facts_baseline(note_text: str, retrieved_policy: List[Dict[str, Any]
         if span:
             evidence["conservative_care_weeks"] = [span]
     if treatments:
-        # store first keyword mention as evidence for each treatment
+        # store all keyword mentions as evidence for each treatment
         evs = []
         for t in treatments:
             kws = TREATMENT_KEYWORDS.get(t, [])
             for kw in kws:
                 sp = _evidence_span(note_text, kw)
                 if sp:
-                    evs.append(sp); break
+                    evs.append(sp)
         if evs:
             evidence["treatments"] = evs
     if red_flags:
@@ -207,7 +207,7 @@ def extract_facts_baseline(note_text: str, retrieved_policy: List[Dict[str, Any]
             for kw in kws:
                 sp = _evidence_span(note_text, kw)
                 if sp:
-                    evs.append(sp); break
+                    evs.append(sp)
         if evs:
             evidence["red_flags"] = evs
 

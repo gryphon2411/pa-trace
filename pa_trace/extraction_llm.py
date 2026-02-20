@@ -13,8 +13,9 @@ from pathlib import Path
 from typing import Dict, Any, List, Optional
 
 from .extraction_baseline import (
-    extract_facts_baseline, _detect_red_flags, _find_conservative_care_weeks,
-    RED_FLAG_KEYWORDS, _evidence_span,
+    extract_facts_baseline, _detect_red_flags, _detect_treatments,
+    _find_conservative_care_weeks,
+    RED_FLAG_KEYWORDS, TREATMENT_KEYWORDS, _evidence_span, _is_negated,
 )
 from .prompt_template import PROMPT_TEMPLATE
 
@@ -275,6 +276,95 @@ def _boost_conservative_care_from_baseline(parsed: Dict[str, Any], note_text: st
 
 
 # -----------------------------------------------------------------------------
+# Baseline-Boosted Treatment Detection
+# -----------------------------------------------------------------------------
+def _boost_treatments_from_baseline(parsed: Dict[str, Any], note_text: str) -> Dict[str, Any]:
+    """
+    Safety net: run baseline regex treatment detection and merge any
+    treatments the LLM missed. Normalizes LLM display-name treatments
+    to baseline category keys.
+    """
+    baseline_treats = _detect_treatments(note_text)  # returns keys like 'nsaids', 'pt'
+    llm_treats = list(parsed.get("treatments", []))
+
+    # Normalize LLM display names -> baseline keys
+    llm_keys = set()
+    for t in llm_treats:
+        t_lower = t.lower().replace(" ", "_")
+        # Direct key match
+        if t_lower in TREATMENT_KEYWORDS:
+            llm_keys.add(t_lower)
+            continue
+        # Check if the LLM name is a keyword value
+        for key, kws in TREATMENT_KEYWORDS.items():
+            if t.lower() in [kw.lower() for kw in kws]:
+                llm_keys.add(key)
+                break
+
+    # Merge baseline-detected treatments the LLM missed
+    missing_treats = [t for t in baseline_treats if t not in llm_keys]
+    if missing_treats:
+        merged = sorted(set(list(llm_keys) + missing_treats))
+        parsed["treatments"] = merged
+    elif llm_keys != set(llm_treats):
+        # Normalize existing LLM treatment names to baseline keys
+        parsed["treatments"] = sorted(llm_keys)
+    # else: keep as-is
+
+    return parsed
+
+
+# -----------------------------------------------------------------------------
+# Baseline-Boosted Evidence Spans
+# -----------------------------------------------------------------------------
+def _boost_evidence_spans_from_baseline(parsed: Dict[str, Any], note_text: str) -> Dict[str, Any]:
+    """
+    Enrich LLM evidence with additional keyword highlights from baseline.
+
+    For each detected treatment/red flag category, scan the note for ALL
+    matching keywords and add evidence spans the LLM didn't quote.
+    Respects negation for red flags (won't highlight "Denies fever").
+    """
+    evidence = parsed.get("evidence", {})
+    note_lower = note_text.lower()
+
+    # --- Treatments: add spans for all matching keywords ---
+    treatments = parsed.get("treatments", [])
+    if treatments:
+        existing_quotes = {sp.get("quote", "").lower() for sp in evidence.get("treatments", [])}
+        extra_spans = []
+        for treat in treatments:
+            for kw in TREATMENT_KEYWORDS.get(treat, []):
+                if kw.lower() not in existing_quotes:
+                    span = _evidence_span(note_text, kw)
+                    if span:
+                        extra_spans.append(span)
+                        existing_quotes.add(kw.lower())
+        if extra_spans:
+            evidence["treatments"] = list(evidence.get("treatments", [])) + extra_spans
+
+    # --- Red flags: add spans for all non-negated matching keywords ---
+    red_flags = parsed.get("red_flags", [])
+    if red_flags:
+        existing_quotes = {sp.get("quote", "").lower() for sp in evidence.get("red_flags", [])}
+        extra_spans = []
+        for flag in red_flags:
+            for kw in RED_FLAG_KEYWORDS.get(flag, []):
+                if kw.lower() not in existing_quotes:
+                    idx = note_lower.find(kw.lower())
+                    if idx != -1 and not _is_negated(note_lower, idx):
+                        span = _evidence_span(note_text, kw)
+                        if span:
+                            extra_spans.append(span)
+                            existing_quotes.add(kw.lower())
+        if extra_spans:
+            evidence["red_flags"] = list(evidence.get("red_flags", [])) + extra_spans
+
+    parsed["evidence"] = evidence
+    return parsed
+
+
+# -----------------------------------------------------------------------------
 # Main Extraction Function
 # -----------------------------------------------------------------------------
 def extract_facts_llm(note_text: str, retrieved_policy: List[Dict[str, Any]]) -> Dict[str, Any]:
@@ -333,13 +423,19 @@ def extract_facts_llm(note_text: str, retrieved_policy: List[Dict[str, Any]]) ->
     # 6. Validate evidence spans
     validated = _validate_evidence_spans(parsed, note_text)
     
-    # 7. Boost red flags from baseline (safety net)
+    # 7. Boost red flags from baseline (safety net for missed detections)
     validated = _boost_red_flags_from_baseline(validated, note_text)
 
-    # 8. Boost conservative care from baseline (safety net)
+    # 8. Boost conservative care from baseline (safety net for missed detections)
     validated = _boost_conservative_care_from_baseline(validated, note_text)
+
+    # 9. Boost treatments from baseline (safety net for missed detections)
+    validated = _boost_treatments_from_baseline(validated, note_text)
+
+    # 10. Boost evidence spans from baseline (fill highlight gaps)
+    validated = _boost_evidence_spans_from_baseline(validated, note_text)
     
-    # 9. Ensure required fields exist
+    # 10. Ensure required fields exist
     validated.setdefault("symptoms_duration_weeks", None)
     validated.setdefault("conservative_care_weeks", None)
     validated.setdefault("treatments", [])
