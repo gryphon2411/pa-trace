@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="logo.png" alt="PA-Trace Logo" width="120">
+
 # PA-Trace 
 ## Evidence-Traced Prior Authorization Packet Drafter
 <br>
@@ -8,13 +10,9 @@
 
 </div>
 
-<br><br>
-
 ### The Problem
 * **Administrative Waste:** Clinicians spend 15–45 mins per case extracting evidence from unstructured notes.
 * **The "Ping-Pong" Effect:** Missing evidence (e.g., conservative care history) causes rejections & delays care.
-
-<br>
 
 ### The Solution: PA-Trace
 An **on-device, agentic workflow** that turns a clinic note + imaging order + payer policy into a **submission-ready draft**.

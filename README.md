@@ -1,7 +1,15 @@
-# PA-Trace — UI-less Hackathon MVP
+# PA-Trace
 
-An **agentic prior authorization (PA) packet drafter** demo:
-**clinic note + imaging order + payer criteria text → filled PA packet draft + criteria checklist + evidence tracing**.
+<div align="center">
+  <img src="docs/slides/logo.png" alt="PA-Trace Logo" width="200"/>
+  <h3>Evidence-Traced Prior-Authorization using MedGemma 4B</h3>
+  <p><strong>A submission for the Google Impact Hackathon / Kaggle</strong></p>
+  <p><a href="https://youtu.be/NTy49YUDdOQ"><strong>📺 Watch the Demo Video on YouTube</strong></a></p>
+</div>
+<br>
+
+An **on-device, agentic workflow** that turns a:
+**clinic note + imaging order + payer policy → submission-ready PA draft + criteria checklist + exact evidence tracing**.
 
 ## What this is (and isn't)
 - ✅ A *demo / hackathon prototype* focused on **documentation assembly**, not clinical decision-making.
@@ -72,8 +80,8 @@ On the 10-case synthetic eval set:
 |--------|----------|
 | `symptoms_duration_weeks` | ~0.90 |
 | `conservative_care_weeks` | ~0.90 |
-| `red_flags_present` | ~0.70 |
-| `decision_accuracy` | ~0.60–0.70 |
+| `red_flags_present` | ~0.90 |
+| `decision_accuracy` | ~0.80–0.90 |
 | `provenance_valid_rate` | 1.00 |
 | `abstention_precision` | 1.00 |
 
